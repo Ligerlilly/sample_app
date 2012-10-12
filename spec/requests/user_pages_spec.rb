@@ -41,5 +41,13 @@ describe "User pages" do
         expect { click_button submit }.to change(User, :count).by(1)
       end
     end
-  end
+  
+  
+   describe "after submission" do
+        before { click_button submit }
+
+        it { should have_selector('title', text: 'Sign up') }
+        it { should have_content('error') }
+      end
+   end
 end
