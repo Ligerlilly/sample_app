@@ -118,4 +118,23 @@ describe User do
     before { @user.save }
     its(:remember_token) { should_not be_blank }
   end
+  
+  describe "user requests new password" do
+    it "generates a unique password_reset_token each time" do
+    @user.send_password_reset
+    last_token = @user.password_reset_token
+    @user.send_password_reset
+    @user.password_reset_token.should_not eq(last_token) 
+    end
+  
+  it "saves the time the password was reset" do
+    @user.send_password_reset
+    @user.reload.password_reset_sent_at.should be_present
+    end
+  
+  it "delivers mail to user" do
+    @user.send_password_reset
+    last_email.to.should include(@user.email)
+    end
+  end
 end
