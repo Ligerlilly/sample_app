@@ -1,0 +1,21 @@
+
+<% provide(:title, "Edit password") %> 
+<h1>Update your password</h1>
+<div class="row">
+  <div class="span6 offset3">
+    <%= form_for @user, :url => password_reset_path(params[:id]) do |f| %>
+      <%= render 'shared/error_messages' %>
+
+      <%= f.label :password %>
+      <%= f.password_field :password %>
+
+      <%= f.label :password_confirmation, "Password confirmation " %>
+      <%= f.password_field :password_confirmation %>
+
+      <%= f.submit "Update Password", class: "btn btn-large btn-primary" %>
+    <% end %>
+
+    <%= gravatar_for @user %>
+    <a href="http://gravatar.com/emails">change</a>
+  </div>
+</div>
