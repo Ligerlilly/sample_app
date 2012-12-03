@@ -12,6 +12,8 @@ describe "Authentication" do
 
       it { should have_selector('title', text: 'Sign in') }
       it { should have_selector('div.alert.alert-error', text: 'Invalid') }
+      it { should_not have_link('Profile') }
+      it { should_not have_link('Settings') }
       
       describe "after visiting another page" do
         before { click_link "Home" }
@@ -22,9 +24,7 @@ describe "Authentication" do
     describe "with valid information" do
       let(:user) { FactoryGirl.create(:user) }
       before do
-        fill_in "Email",    with: user.email
-        fill_in "Password", with: user.password
-        click_button "Sign in"
+        sign_in(user)
       end
 
       it { should have_selector('title', text: user.name) }
@@ -74,6 +74,34 @@ describe "Authentication" do
           before { visit users_path }
           it { should have_selector('title', text: 'Sign in') }
         end
+        
+         describe "when attempting to visit a protected page" do
+        before do
+          visit edit_user_path(user)
+          fill_in "Email",    with: user.email
+          fill_in "Password", with: user.password
+          click_button "Sign in"
+        end
+
+        describe "after signing in" do
+
+          it "should render the desired protected page" do
+            page.should have_selector('title', text: 'Edit user')
+          end
+
+          describe "when signing in again" do
+            before do
+              delete signout_path
+              sign_in(user)
+            end
+
+            it "should render the default (profile) page" do
+              page.should have_selector('title', text: user.name) 
+            end
+          end
+        end
+      end
+    
       end
       
       describe "as non-admin user" do
@@ -87,6 +115,16 @@ describe "Authentication" do
         specify { response.should redirect_to(root_path) }        
       end
     end
+    
+    describe "as admin" do
+      let(:admin) { FactoryGirl.create(:admin) }
+      before { sign_in admin }
+      it "admin should not be able to delete themself" do
+          expect { delete user_path(admin) }.to_not change(User, :count).by(-1)
+      end
+      
+    end
+   
     end
     
      describe "as wrong user" do

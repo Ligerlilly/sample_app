@@ -126,6 +126,7 @@ describe "User pages" do
       end
       end
     end
+    
     describe "delete links" do
 
       it { should_not have_link('delete') }
@@ -167,6 +168,13 @@ describe "User pages" do
     end
   end
     
+    describe "admin attribute" do
+    it "should not allow access to admin" do
+      expect do
+          User.new(admin: true)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end    
+  end
   
 
 end
