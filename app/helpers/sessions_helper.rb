@@ -28,6 +28,13 @@ module SessionsHelper
   def current_user?(user)
     user == current_user
   end
+  
+  def signed_in_user
+      unless signed_in?
+      redirect_to signin_url, notice: "Please sign in."
+      store_location 
+      end
+    end
   #The redirect_back_or method redirects to the requested URI if it exists, 
   #or some default URI otherwise, which we add to the Sessions controller create action 
   #to redirect after successful signin
