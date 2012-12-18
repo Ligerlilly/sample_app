@@ -22,6 +22,7 @@ group :assets do
   gem 'sass-rails',   '3.2.5'
   gem 'coffee-rails', '3.2.2'
   gem 'uglifier', '1.2.3'
+  gem 'therubyracer'
 end
 
 group :test do
