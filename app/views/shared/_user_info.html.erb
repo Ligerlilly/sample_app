@@ -5,7 +5,9 @@
   <%= current_user.name %>
 </h1>
 <span>
-  <%= link_to "view my profile", current_user %>
+	<% if params[:action] == 'home' %>
+  <%= link_to "view my profile", current_user %> 
+  <% end %>
 </span>
 <span>
   <%= pluralize(current_user.microposts.count, "micropost") %>
